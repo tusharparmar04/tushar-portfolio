@@ -22,17 +22,44 @@ document.querySelectorAll('.navbar a').forEach(link => {
   };
 });
 
-// WhatsApp form redirect
-document.querySelector("form").addEventListener("submit", function (e) {
+// Formspree submission with alert
+const form = document.getElementById('contactForm');
+form.addEventListener("submit", function (e) {
   e.preventDefault();
+  const data = new FormData(form);
+  fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(response => {
+    alert("✅ Message sent successfully!");
+    form.reset();
+  }).catch(error => {
+    alert("❌ Oops! Something went wrong.");
+  });
+});
 
-  const name = document.querySelector("input[name='name']").value;
-  const email = document.querySelector("input[name='email']").value;
-  const number = document.querySelector("input[name='number']").value;
-  const subject = document.querySelector("input[name='subject']").value;
-  const message = document.querySelector("textarea[name='message']").value;
+// Security: Disable right-click, Ctrl+U, F12, etc.
+document.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+});
 
-  const whatsappMessage = `Name: ${name}%0AEmail: ${email}%0APhone: ${number}%0ASubject: ${subject}%0AMessage: ${message}`;
+document.onkeydown = function(e) {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.key.toLowerCase() === "u") ||
+    (e.ctrlKey && e.key.toLowerCase() === "s") ||
+    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") ||
+    (e.ctrlKey && e.key.toLowerCase() === "c") ||
+    (e.ctrlKey && e.key.toLowerCase() === "a")
+  ) {
+    e.preventDefault();
+    return false;
+  }
+};
 
-  window.open(`https://wa.me/918320026235?text=${whatsappMessage}`, "_blank");
+document.addEventListener('selectstart', function (e) {
+  e.preventDefault();
 });
